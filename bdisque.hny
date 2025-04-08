@@ -1,31 +1,24 @@
 import lists
 
-def Disque() returns d:
-  d = {.elements: [], .current: 0}
+def Bdisque(n) returns d:
+  d = {.elements: [None,] * n, .current: 0, .max_size: n}
 
 def insert(d, v):
-  atomically:
+  atomically when len(d->elements) < d->max_size:
     d->elements = lists.subseq(d->elements, 0, d->current) + [v,] + lists.subseq(d->elements, d->current, len d->elements)
 
 def delete(d) returns returnVal:
-  atomically:
-    returnVal = None
-    
-    if len d->elements > 0: 
-      returnVal = d->elements[d->current]
-      d->elements = lists.subseq(d->elements, 0, d->current) + lists.subseq(d->elements, d->current + 1, len d->elements)
-      d->current += 1
+  atomically when len(d->elements) > 0:
+    returnVal = d->elements[d->current]
+    d->elements = lists.subseq(d->elements, 0, d->current) + lists.subseq(d->elements, d->current + 1, len d->elements)
 
-      if d->current >= len d->elements: 
-        d->current = 0
+    if d->current >= len(d->elements): 
+      d->current = 0
 
 def next(d) returns returnVal:
-  atomically:
-    returnVal = None
+  atomically when len(d->elements) > 0:
+    returnVal = d->elements[d->current]
+    d->current += 1
 
-    if len d->elements > 0:
-      returnVal = d->elements[d->current]
-      d->current += 1
-
-      if d->current >= len d->elements: 
-        d->current = 0
+    if d->current >= len(d->elements): 
+      d->current = 0
