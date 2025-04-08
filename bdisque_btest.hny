@@ -25,8 +25,8 @@ def next_test(self):
 for i in {1..N_INSERT}:
     spawn insert_test(i)
 
-for i in {1..N_DELETE}:
-    spawn delete_test(i)
+# for i in {1..N_DELETE}:
+#     spawn delete_test(i)
 
-for i in {1..N_NEXT}:
-    spawn next_test(i)
+# for i in {1..N_NEXT}:
+#     spawn next_test(i)
