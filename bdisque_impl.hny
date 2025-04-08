@@ -1,4 +1,5 @@
 from synch import *
+import lists
 
 def Bdisque(n) returns d:
   d = {.current: 0, .curr_size: 0, .elements: [None,] * n, .lock: Lock(), .max_size: n, .not_empty_cond: Condition(), .not_full_cond: Condition()}
