@@ -1,0 +1,31 @@
+import disque
+
+const N_INSERT = 1
+const N_DELETE = 1
+const N_NEXT = 1
+
+d = disque.Disque()
+
+def insert_test(self):
+    print("Testing insert", self)
+    disque.insert(?d, self)
+    print("Done inserting", self)
+
+def delete_test(self):
+    print("Testing delete", self)
+    let v = disque.delete(?d):
+        print("Done deleting", self, v)
+
+def next_test(self):
+    print("Testing next", self)
+    let v = disque.next(?d):
+        print("Done next", self, v)
+
+for i in {1..N_INSERT}:
+    spawn insert_test(i)
+
+for i in {1..N_DELETE}:
+    spawn delete_test(i)
+
+for i in {1..N_NEXT}:
+    spawn next_test(i)
