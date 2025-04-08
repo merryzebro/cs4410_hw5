@@ -1,43 +1,45 @@
 from synch import *
 
 def Bdisque(n) returns d:
-  d = {.current: 0, .elements: [None,] * n, .lock: Lock(), .max_size: n, .not_empty_cond: Condition(), .not_full_cond: Condition()}
+  d = {.current: 0, .curr_size: 0, .elements: [None,] * n, .lock: Lock(), .max_size: n, .not_empty_cond: Condition(), .not_full_cond: Condition()}
 
 def insert(d, v):
   acquire(?d -> lock)
 
-  while d->size >= d->max_size:
+  while d->curr_size >= d->max_size:
     wait(?d->not_full_cond, ?d->lock)
   
   d->elements = lists.subseq(d->elements, 0, d->current) + [v,] + lists.subseq(d->elements, d->current, len d->elements)
+  d->curr_size += 1
   notify_all(?d->not_empty_cond)
   release(?d -> lock)
 
 def delete(d) returns returnVal:
   acquire(?d -> lock)
 
-  while d->size == 0:
+  while d->curr_size == 0:
     wait(?d->not_empty_cond, ?d->lock)
   
   returnVal = d->elements[d->current]
   d->elements = lists.subseq(d->elements, 0, d->current) + lists.subseq(d->elements, d->current + 1, len d->elements)
 
-  if d->current >= len(d->elements): 
+  if d->current >= d->curr_size: 
       d->current = 0
-    
+  
+  d->curr_size -= 1
   notify_all(?d->not_full_cond)
   release(?d -> lock)
 
 def next(d) returns returnVal:
   acquire(?d -> lock)
 
-  while d->size == 0:
+  while d->curr_size == 0:
     wait(?d->not_empty_cond, ?d->lock)
 
   returnVal = d->elements[d->current]
   d->current += 1
 
-  if d->current >= len(d->elements): 
+  if d->current >= d->curr_size: 
     d->current = 0
   
   release(?d -> lock)
